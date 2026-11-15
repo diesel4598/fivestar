@@ -17,7 +17,7 @@ import { RESTAURANT_INFO } from '../data/restaurantData';
 
 export const LocationFooterSection = () => {
   const { lang, dir, t } = useLanguage();
-  const { requestOpenManager } = useMenu();
+  const { requestOpenManager, isAdminRevealed, isAuthenticated } = useMenu();
 
   return (
     <footer id="contact" className="relative bg-[#0A0A0A] text-neutral-300 pt-16 pb-24 lg:pb-12 border-t border-neutral-800 scroll-mt-20">
@@ -197,15 +197,19 @@ export const LocationFooterSection = () => {
           {/* Copyright & Discreet Admin Access */}
           <div className="flex items-center gap-4">
             <span>© {new Date().getFullYear()} {lang === 'ar' ? 'خمس نجوم - جميع الحقوق محفوظة' : '5 Étoiles. Tous droits réservés.'}</span>
-            <span className="text-neutral-700">•</span>
-            <button
-              type="button"
-              onClick={requestOpenManager}
-              className="inline-flex items-center gap-1 text-[11px] text-neutral-500 hover:text-[#D4AF37] transition-colors cursor-pointer"
-            >
-              <Lock className="w-3 h-3" />
-              <span>{lang === 'ar' ? 'دخول الإدارة 🔒' : 'Espace Gérant 🔒'}</span>
-            </button>
+            {(isAdminRevealed || isAuthenticated) && (
+              <>
+                <span className="text-neutral-700">•</span>
+                <button
+                  type="button"
+                  onClick={requestOpenManager}
+                  className="inline-flex items-center gap-1 text-[11px] text-neutral-500 hover:text-[#D4AF37] transition-colors cursor-pointer animate-fadeIn"
+                >
+                  <Lock className="w-3 h-3" />
+                  <span>{lang === 'ar' ? 'دخول الإدارة 🔒' : 'Espace Gérant 🔒'}</span>
+                </button>
+              </>
+            )}
           </div>
 
         </div>

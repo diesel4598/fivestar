@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { MENU_ITEMS as DEFAULT_MENU_ITEMS, CATEGORIES } from '../data/restaurantData';
 
 const MenuContext = createContext();
@@ -18,6 +18,17 @@ export const MenuProvider = ({ children }) => {
     } catch (e) {}
     return DEFAULT_PIN;
   });
+
+  // Admin visibility hidden by default (unlocked only after 7 clicks on logo)
+  const [isAdminRevealed, setIsAdminRevealed] = useState(() => {
+    try {
+      return sessionStorage.getItem('fivestar_admin_revealed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const logoClickTracker = useRef({ count: 0, lastTime: 0 });
 
   const [menuItems, setMenuItems] = useState(() => {
     try {
@@ -154,6 +165,41 @@ export const MenuProvider = ({ children }) => {
     return { success: true };
   };
 
+  // Secret trigger: clicking on the logo 7 times reveals the admin and opens the PIN modal
+  const handleLogoSecretClick = () => {
+    const now = Date.now();
+    const { count, lastTime } = logoClickTracker.current;
+
+    // Reset if more than 2.8 seconds between clicks
+    let newCount = 1;
+    if (now - lastTime < 2800) {
+      newCount = count + 1;
+    }
+
+    logoClickTracker.current = { count: newCount, lastTime: now };
+
+    if (newCount === 7) {
+      logoClickTracker.current = { count: 0, lastTime: 0 };
+      setIsAdminRevealed(true);
+      try {
+        sessionStorage.setItem('fivestar_admin_revealed', 'true');
+      } catch (e) {}
+
+      if (isAuthenticated) {
+        setIsManagerOpen(true);
+      } else {
+        setIsPinModalOpen(true);
+      }
+
+      showToast({
+        ar: 'تم كشف منطقة الإدارة السرية 🔐',
+        fr: 'Zone d\'administration révélée 🔐',
+      }, 'info');
+      return true;
+    }
+    return false;
+  };
+
   // Request to open management panel
   const requestOpenManager = () => {
     if (isAuthenticated) {
@@ -163,17 +209,19 @@ export const MenuProvider = ({ children }) => {
     }
   };
 
-  // Lock and logout
+  // Lock and logout (also re-hides the admin controls until next 7 logo clicks)
   const lockAdmin = () => {
     setIsAuthenticated(false);
     setIsManagerOpen(false);
     setIsAddEditModalOpen(false);
+    setIsAdminRevealed(false);
     try {
       sessionStorage.removeItem('fivestar_admin_auth');
+      sessionStorage.removeItem('fivestar_admin_revealed');
     } catch (e) {}
     showToast({
-      ar: 'تم قفل صلاحيات التعديل وإغلاق لوحة الإدارة 🔒',
-      fr: 'Session administrateur verrouillée 🔒',
+      ar: 'تم قفل صلاحيات التعديل وإخفاء لوحة الإدارة 🔒',
+      fr: 'Session administrateur verrouillée et masquée 🔒',
     }, 'info');
   };
 
@@ -285,6 +333,9 @@ export const MenuProvider = ({ children }) => {
         menuItems,
         categories: CATEGORIES,
         isAuthenticated,
+        isAdminRevealed,
+        setIsAdminRevealed,
+        handleLogoSecretClick,
         adminPin,
         changePin,
         resetPinToDefault,

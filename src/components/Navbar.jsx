@@ -22,9 +22,24 @@ import { RESTAURANT_INFO } from '../data/restaurantData';
 export const Navbar = () => {
   const { lang, dir, toggleLanguage, t } = useLanguage();
   const { totalItemsCount, grandTotal, setIsCartOpen } = useCart();
-  const { requestOpenManager, isAuthenticated, lockAdmin } = useMenu();
+  const { 
+    requestOpenManager, 
+    isAuthenticated, 
+    lockAdmin, 
+    isAdminRevealed, 
+    handleLogoSecretClick 
+  } = useMenu();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const onLogoClick = (e) => {
+    const didTrigger = handleLogoSecretClick();
+    if (!didTrigger) {
+      handleLinkClick(e, '#home');
+    } else {
+      e.preventDefault();
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -100,11 +115,12 @@ export const Navbar = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           
-          {/* Brand Logo */}
+          {/* Brand Logo - 7 clicks secretly triggers Admin access */}
           <a 
             href="#home" 
-            onClick={(e) => handleLinkClick(e, '#home')}
-            className="flex items-center gap-3 group"
+            onClick={onLogoClick}
+            className="flex items-center gap-3 group select-none cursor-pointer"
+            title={lang === 'ar' ? 'خمس نجوم | الرئيسية' : '5 ÉTOILES | Accueil'}
           >
             {/* Visual Logo Emblem */}
             <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-[#241F14] to-[#121212] border border-[#D4AF37]/50 shadow-lg group-hover:border-[#D4AF37] transition-all duration-300">
@@ -147,40 +163,42 @@ export const Navbar = () => {
           {/* Actions: Admin Manager & Language Switcher & Cart Button & Mobile Menu */}
           <div className="flex items-center gap-2 sm:gap-3">
             
-            {/* Manager / Menu Admin Button with PIN Protection (4598) */}
-            {isAuthenticated ? (
-              <div className="flex items-center gap-1">
+            {/* Manager / Menu Admin Button - HIDDEN by default; revealed ONLY after 7 clicks on logo */}
+            {(isAdminRevealed || isAuthenticated) && (
+              isAuthenticated ? (
+                <div className="flex items-center gap-1 animate-fadeIn">
+                  <button
+                    type="button"
+                    onClick={requestOpenManager}
+                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-500/20 border border-[#D4AF37] text-[#D4AF37] hover:bg-amber-500/30 font-cairo text-xs font-bold transition-all shadow cursor-pointer"
+                    title={lang === 'ar' ? 'فتح لوحة إدارة المنيو والأسعار' : 'Ouvrir la gestion du menu'}
+                  >
+                    <Unlock className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="hidden md:inline">{lang === 'ar' ? 'لوحة التحكم' : 'Gestion'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={lockAdmin}
+                    className="p-1.5 rounded-lg bg-neutral-900 border border-neutral-700/80 hover:bg-rose-950/40 text-neutral-400 hover:text-rose-400 text-xs transition-colors cursor-pointer"
+                    title={lang === 'ar' ? 'قفل الصلاحيات وإخفاء الزر 🔒' : 'Verrouiller et masquer 🔒'}
+                  >
+                    <Lock className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ) : (
                 <button
                   type="button"
                   onClick={requestOpenManager}
-                  className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-500/20 border border-[#D4AF37] text-[#D4AF37] hover:bg-amber-500/30 font-cairo text-xs font-bold transition-all shadow cursor-pointer"
-                  title={lang === 'ar' ? 'فتح لوحة إدارة المنيو والأسعار' : 'Ouvrir la gestion du menu'}
+                  aria-label="Admin PIN Access"
+                  className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-neutral-900/90 border border-[#D4AF37]/60 text-xs font-semibold text-[#D4AF37] hover:bg-neutral-800 transition-all cursor-pointer animate-fadeIn shadow-lg shadow-amber-950/40"
+                  title={lang === 'ar' ? 'الدخول للوحة الإدارة 🔒' : 'Accès Administration 🔒'}
                 >
-                  <Unlock className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="hidden md:inline">{lang === 'ar' ? 'لوحة التحكم' : 'Gestion'}</span>
+                  <Lock className="w-3.5 h-3.5 text-[#D4AF37]" />
+                  <span className="hidden md:inline font-cairo text-xs">
+                    {lang === 'ar' ? 'الإدارة' : 'Gérant'}
+                  </span>
                 </button>
-                <button
-                  type="button"
-                  onClick={lockAdmin}
-                  className="p-1.5 rounded-lg bg-neutral-900 border border-neutral-700/80 hover:bg-rose-950/40 text-neutral-400 hover:text-rose-400 text-xs transition-colors cursor-pointer"
-                  title={lang === 'ar' ? 'قفل الصلاحيات 🔒' : 'Verrouiller 🔒'}
-                >
-                  <Lock className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={requestOpenManager}
-                aria-label="Admin PIN Access"
-                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-neutral-900/90 border border-neutral-700/70 hover:border-[#D4AF37]/70 text-xs font-semibold text-neutral-400 hover:text-[#D4AF37] transition-all cursor-pointer"
-                title={lang === 'ar' ? 'الدخول للوحة الإدارة 🔒' : 'Accès Administration 🔒'}
-              >
-                <Lock className="w-3.5 h-3.5 text-amber-500/80" />
-                <span className="hidden md:inline font-cairo text-xs">
-                  {lang === 'ar' ? 'الإدارة' : 'Gérant'}
-                </span>
-              </button>
+              )
             )}
 
             {/* Language Switcher */}
@@ -233,27 +251,29 @@ export const Navbar = () => {
         {/* Mobile Slide-Down Menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden glass-panel border-t border-neutral-800 mt-2 px-4 py-4 space-y-2 animate-fadeIn">
-            {/* Direct Admin Access Button in Mobile Menu with PIN */}
-            <button
-              type="button"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                requestOpenManager();
-              }}
-              className="w-full text-start flex items-center justify-between px-4 py-2.5 rounded-xl bg-[#1A160F] border border-[#D4AF37]/40 text-[#D4AF37] font-bold text-xs mb-3 shadow cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                {isAuthenticated ? (
-                  <Unlock className="w-4 h-4 text-emerald-400" />
-                ) : (
-                  <Lock className="w-4 h-4 text-[#D4AF37]" />
-                )}
-                <span>{lang === 'ar' ? 'لوحة الإدارة والتحكم في الأسعار 🔒' : 'Espace Administration & Tarifs 🔒'}</span>
-              </div>
-              <span className="text-[10px] bg-neutral-900 px-2 py-0.5 rounded text-neutral-400">
-                {isAuthenticated ? (lang === 'ar' ? 'مفتوح 🔓' : 'Actif 🔓') : (lang === 'ar' ? 'محمي 🔒' : 'Protégé 🔒')}
-              </span>
-            </button>
+            {/* Direct Admin Access Button in Mobile Menu - ONLY if revealed or authenticated */}
+            {(isAdminRevealed || isAuthenticated) && (
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  requestOpenManager();
+                }}
+                className="w-full text-start flex items-center justify-between px-4 py-2.5 rounded-xl bg-[#1A160F] border border-[#D4AF37]/40 text-[#D4AF37] font-bold text-xs mb-3 shadow cursor-pointer animate-fadeIn"
+              >
+                <div className="flex items-center gap-2">
+                  {isAuthenticated ? (
+                    <Unlock className="w-4 h-4 text-emerald-400" />
+                  ) : (
+                    <Lock className="w-4 h-4 text-[#D4AF37]" />
+                  )}
+                  <span>{lang === 'ar' ? 'لوحة الإدارة والتحكم في الأسعار 🔒' : 'Espace Administration & Tarifs 🔒'}</span>
+                </div>
+                <span className="text-[10px] bg-neutral-900 px-2 py-0.5 rounded text-neutral-400">
+                  {isAuthenticated ? (lang === 'ar' ? 'مفتوح 🔓' : 'Actif 🔓') : (lang === 'ar' ? 'محمي 🔒' : 'Protégé 🔒')}
+                </span>
+              </button>
+            )}
 
             {navLinks.map((link) => (
               <a
