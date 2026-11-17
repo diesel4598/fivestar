@@ -19,7 +19,7 @@ import { useMenu } from '../context/MenuContext';
 export const FamilyPlattersSection = () => {
   const { lang, dir, t } = useLanguage();
   const { addToCart, setIsCartOpen } = useCart();
-  const { menuItems, isAdminMode, openEditModal } = useMenu();
+  const { menuItems, isAdminMode, openEditModal, siteContent } = useMenu();
 
   const royalFeastItem = menuItems.find(i => i.id === 'royal-grand-feast') || menuItems[0];
 
@@ -42,17 +42,17 @@ export const FamilyPlattersSection = () => {
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/50 text-[#D4AF37] text-xs font-bold tracking-wider uppercase">
             <Crown className="w-4 h-4" />
-            <span>{lang === 'ar' ? 'عروض العائلة والولائم الكبرى' : 'Offres Familiales & Banquets'}</span>
+            <span>{siteContent?.familyBadge?.[lang] || (lang === 'ar' ? 'عروض العائلة والولائم الكبرى' : 'Offres Familiales & Banquets')}</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-cairo text-white">
-            {lang === 'ar' ? 'صينية خمس نجوم الملكية.. لمة العائلة على أصولها' : 'Le Banquet Royal 5 Étoiles.. Pour Réunir la Famille'}
+            {siteContent?.familyTitle?.[lang] || (lang === 'ar' ? 'صينية خمس نجوم الملكية.. لمة العائلة على أصولها' : 'Le Banquet Royal 5 Étoiles.. Pour Réunir la Famille')}
           </h2>
 
           <p className="text-sm sm:text-base text-neutral-400">
-            {lang === 'ar'
+            {siteContent?.familySubtitle?.[lang] || (lang === 'ar'
               ? 'سفرة كاملة من أشهى المشاوي والشاورما والمقبلات الشامية الساخنة، مجهزة لتبهج ضيوفك وعائلتك بأعلى معايير الجودة.'
-              : 'Une table généreuse composée des meilleures viandes braisées, shawarmas et mezzés chauds pour vos grands moments.'}
+              : 'Une table généreuse composée des meilleures viandes braisées, shawarmas et mezzés chauds pour vos grands moments.')}
           </p>
         </div>
 

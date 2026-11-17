@@ -17,7 +17,7 @@ import { RESTAURANT_INFO } from '../data/restaurantData';
 
 export const LocationFooterSection = () => {
   const { lang, dir, t } = useLanguage();
-  const { requestOpenManager, isAdminRevealed, isAuthenticated } = useMenu();
+  const { requestOpenManager, isAdminRevealed, isAuthenticated, siteContent } = useMenu();
 
   return (
     <footer id="contact" className="relative bg-[#0A0A0A] text-neutral-300 pt-16 pb-24 lg:pb-12 border-t border-neutral-800 scroll-mt-20">
@@ -40,7 +40,7 @@ export const LocationFooterSection = () => {
                 {lang === 'ar' ? 'موقعنا في الدار البيضاء' : 'Notre Adresse'}
               </h3>
               <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
-                {t(RESTAURANT_INFO.address)}
+                {siteContent?.address?.[lang] || t(RESTAURANT_INFO.address)}
               </p>
             </div>
             <a
@@ -64,7 +64,7 @@ export const LocationFooterSection = () => {
                 {lang === 'ar' ? 'ساعات العمل والتوصيل' : 'Horaires d\'Ouverture'}
               </h3>
               <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
-                {t(RESTAURANT_INFO.openingHours)}
+                {siteContent?.openingHours?.[lang] || t(RESTAURANT_INFO.openingHours)}
               </p>
               <span className="inline-block mt-2 px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 text-[11px] font-bold">
                 {lang === 'ar' ? 'خدمة التوصيل السريع متاحة طوال الوقت' : 'Service de livraison continu'}
@@ -86,15 +86,15 @@ export const LocationFooterSection = () => {
               </p>
               <div className="flex flex-col gap-2">
                 <a
-                  href={`tel:${RESTAURANT_INFO.phone}`}
+                  href={`tel:${siteContent?.phone || RESTAURANT_INFO.phone}`}
                   className="inline-flex items-center gap-2 text-sm font-black text-white hover:text-[#D4AF37] transition-colors"
                   dir="ltr"
                 >
                   <Phone className="w-4 h-4 text-[#E85D04]" />
-                  <span>{RESTAURANT_INFO.phone}</span>
+                  <span>{siteContent?.phone || RESTAURANT_INFO.phone}</span>
                 </a>
                 <a
-                  href={`https://wa.me/${RESTAURANT_INFO.whatsappNumber}?text=${encodeURIComponent(lang === 'ar' ? 'السلام عليكم، أود الاستفسار عن المنيو والطلبات' : 'Bonjour, je souhaite me renseigner sur le menu')}`}
+                  href={`https://wa.me/${siteContent?.whatsappNumber || RESTAURANT_INFO.whatsappNumber}?text=${encodeURIComponent(lang === 'ar' ? 'السلام عليكم، أود الاستفسار عن المنيو والطلبات' : 'Bonjour, je souhaite me renseigner sur le menu')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-xs font-bold text-emerald-400 hover:text-emerald-300"
@@ -123,10 +123,10 @@ export const LocationFooterSection = () => {
               <MapPin className="w-7 h-7" />
             </div>
             <h4 className="font-cairo font-black text-xl text-white">
-              {lang === 'ar' ? 'مطعم خمس نجوم - المعاريف' : '5 ÉTOILES - Casablanca Maârif'}
+              {siteContent?.brandName?.[lang] || (lang === 'ar' ? 'مطعم خمس نجوم - المعاريف' : '5 ÉTOILES - Casablanca Maârif')}
             </h4>
             <p className="text-xs text-neutral-300">
-              {t(RESTAURANT_INFO.address)}
+              {siteContent?.address?.[lang] || t(RESTAURANT_INFO.address)}
             </p>
             <a
               href="https://maps.google.com"
@@ -147,7 +147,7 @@ export const LocationFooterSection = () => {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5 font-cairo font-bold text-white text-base">
               <Flame className="w-4 h-4 text-[#E85D04]" />
-              <span>{lang === 'ar' ? 'خمس نجوم' : '5 ÉTOILES'}</span>
+              <span>{siteContent?.brandName?.[lang] || (lang === 'ar' ? 'خمس نجوم' : '5 ÉTOILES')}</span>
             </div>
             <span className="text-neutral-700">|</span>
             <span className="flex items-center gap-1 text-[#D4AF37] font-semibold">
@@ -184,7 +184,7 @@ export const LocationFooterSection = () => {
             </a>
             {/* WhatsApp SVG */}
             <a 
-              href={`https://wa.me/${RESTAURANT_INFO.whatsappNumber}`} 
+              href={`https://wa.me/${siteContent?.whatsappNumber || RESTAURANT_INFO.whatsappNumber}`} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="hover:text-[#25D366] transition-colors p-1" 

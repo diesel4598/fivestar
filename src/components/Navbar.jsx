@@ -27,7 +27,8 @@ export const Navbar = () => {
     isAuthenticated, 
     lockAdmin, 
     isAdminRevealed, 
-    handleLogoSecretClick 
+    handleLogoSecretClick,
+    siteContent 
   } = useMenu();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -84,22 +85,22 @@ export const Navbar = () => {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
             </span>
             <span className="font-semibold">
-              {lang === 'ar' 
+              {siteContent?.topAnnouncement?.[lang] || (lang === 'ar' 
                 ? '🔥 كود خصم 10% على طلبك: استخدم كود "5STARS" عند الدفع | توصيل مجاني فوق 150 درهم'
-                : '🔥 -10% avec le code "5STARS" | Livraison offerte dès 150 Dh'}
+                : '🔥 -10% avec le code "5STARS" | Livraison offerte dès 150 Dh')}
             </span>
           </div>
           <div className="hidden md:flex items-center gap-4 text-xs">
             <span className="flex items-center gap-1 opacity-90">
               <Clock className="w-3.5 h-3.5 text-amber-200" />
-              <span>{t(RESTAURANT_INFO.openingHours)}</span>
+              <span>{siteContent?.openingHours?.[lang] || t(RESTAURANT_INFO.openingHours)}</span>
             </span>
             <a 
-              href={`tel:${RESTAURANT_INFO.phone}`} 
+              href={`tel:${siteContent?.phone || RESTAURANT_INFO.phone}`} 
               className="flex items-center gap-1 font-bold text-amber-100 hover:text-white transition-colors"
             >
               <Phone className="w-3.5 h-3.5" />
-              <span dir="ltr">{RESTAURANT_INFO.phone}</span>
+              <span dir="ltr">{siteContent?.phone || RESTAURANT_INFO.phone}</span>
             </a>
           </div>
         </div>
@@ -133,14 +134,14 @@ export const Navbar = () => {
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span className="font-cairo font-black text-xl sm:text-2xl tracking-tight text-white group-hover:text-amber-400 transition-colors">
-                  {lang === 'ar' ? 'خمس نجوم' : '5 ÉTOILES'}
+                  {siteContent?.brandName?.[lang] || (lang === 'ar' ? 'خمس نجوم' : '5 ÉTOILES')}
                 </span>
                 <div className="flex text-[#D4AF37] text-xs space-x-0.5 rtl:space-x-reverse">
                   <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                 </div>
               </div>
               <span className="text-[11px] text-[#D4AF37]/90 font-medium tracking-wide">
-                {lang === 'ar' ? 'مطعم شرقي أصيل • مشاوي وشاورما' : 'Restaurant Oriental Authentique'}
+                {siteContent?.brandSubtitle?.[lang] || (lang === 'ar' ? 'مطعم شرقي أصيل • مشاوي وشاورما' : 'Restaurant Oriental Authentique')}
               </span>
             </div>
           </a>
@@ -288,14 +289,14 @@ export const Navbar = () => {
             <div className="pt-3 border-t border-neutral-800/80 flex items-center justify-between text-xs text-neutral-400">
               <span className="flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-[#D4AF37]" />
-                {t(RESTAURANT_INFO.openingHours)}
+                {siteContent?.openingHours?.[lang] || t(RESTAURANT_INFO.openingHours)}
               </span>
               <a 
-                href={`tel:${RESTAURANT_INFO.phone}`} 
+                href={`tel:${siteContent?.phone || RESTAURANT_INFO.phone}`} 
                 className="font-bold text-[#E85D04]"
                 dir="ltr"
               >
-                {RESTAURANT_INFO.phone}
+                {siteContent?.phone || RESTAURANT_INFO.phone}
               </a>
             </div>
           </div>

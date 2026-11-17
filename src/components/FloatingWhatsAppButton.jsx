@@ -1,10 +1,13 @@
 import React from 'react';
 import { MessageCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useMenu } from '../context/MenuContext';
 import { RESTAURANT_INFO } from '../data/restaurantData';
 
 export const FloatingWhatsAppButton = () => {
   const { lang, dir } = useLanguage();
+  const { siteContent } = useMenu();
+  const whatsappNumber = siteContent?.whatsappNumber || RESTAURANT_INFO.whatsappNumber;
 
   const message = encodeURIComponent(
     lang === 'ar'
@@ -14,7 +17,7 @@ export const FloatingWhatsAppButton = () => {
 
   return (
     <a
-      href={`https://wa.me/${RESTAURANT_INFO.whatsappNumber}?text=${message}`}
+      href={`https://wa.me/${whatsappNumber}?text=${message}`}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contact via WhatsApp"

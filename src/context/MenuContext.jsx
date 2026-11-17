@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { MENU_ITEMS as DEFAULT_MENU_ITEMS, CATEGORIES } from '../data/restaurantData';
+import { DEFAULT_SITE_CONTENT, SITE_CONTENT_STORAGE_KEY } from '../data/defaultSiteContent';
 
 const MenuContext = createContext();
 
@@ -56,9 +57,33 @@ export const MenuProvider = ({ children }) => {
 
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
   const [isManagerOpen, setIsManagerOpen] = useState(false);
+  const [activeAdminTab, setActiveAdminTab] = useState('menu'); // 'menu' | 'texts'
   const [editingItem, setEditingItem] = useState(null); // Item currently in edit modal
   const [isAddEditModalOpen, setIsAddEditModalOpen] = useState(false);
   const [feedbackToast, setFeedbackToast] = useState(null);
+
+  // Site Header & Texts content state (persisted to localStorage)
+  const [siteContent, setSiteContent] = useState(() => {
+    try {
+      const saved = localStorage.getItem(SITE_CONTENT_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return { ...DEFAULT_SITE_CONTENT, ...parsed };
+      }
+    } catch (e) {
+      console.error('Error loading site content from localStorage', e);
+    }
+    return DEFAULT_SITE_CONTENT;
+  });
+
+  // Sync site content to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(SITE_CONTENT_STORAGE_KEY, JSON.stringify(siteContent));
+    } catch (e) {
+      console.error('Error saving site content to localStorage', e);
+    }
+  }, [siteContent]);
 
   // Sync menu items to localStorage
   useEffect(() => {
@@ -305,6 +330,30 @@ export const MenuProvider = ({ children }) => {
     });
   };
 
+  // Update Site Header & Content Texts
+  const updateSiteContent = (newFields) => {
+    setSiteContent(prev => ({
+      ...prev,
+      ...newFields,
+    }));
+    showToast({
+      ar: 'تم حفظ تعديلات الهيدر والنصوص بنجاح! 💾✨',
+      fr: 'Modifications des textes et de l\'en-tête enregistrées avec succès ! 💾✨',
+    });
+  };
+
+  // Reset Site Texts to Default
+  const resetSiteContentToDefault = () => {
+    setSiteContent(DEFAULT_SITE_CONTENT);
+    try {
+      localStorage.removeItem(SITE_CONTENT_STORAGE_KEY);
+    } catch (e) {}
+    showToast({
+      ar: 'تمت استعادة النصوص الأصلية بنجاح 🔄',
+      fr: 'Textes d\'origine restaurés avec succès 🔄',
+    });
+  };
+
   // Open modal to add item
   const openAddModal = (defaultCategory = 'shawarma-platters') => {
     setEditingItem({
@@ -358,6 +407,11 @@ export const MenuProvider = ({ children }) => {
         openAddModal,
         openEditModal,
         feedbackToast,
+        siteContent,
+        updateSiteContent,
+        resetSiteContentToDefault,
+        activeAdminTab,
+        setActiveAdminTab,
       }}
     >
       {children}

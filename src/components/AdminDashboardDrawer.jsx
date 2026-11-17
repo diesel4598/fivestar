@@ -21,11 +21,13 @@ import {
   KeyRound,
   AlertCircle,
   MessageCircle,
-  Phone
+  Phone,
+  Type
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useMenu } from '../context/MenuContext';
 import { RESTAURANT_INFO } from '../data/restaurantData';
+import { AdminTextsEditor } from './AdminTextsEditor';
 
 export const AdminDashboardDrawer = () => {
   const { lang, dir, t } = useLanguage();
@@ -42,7 +44,10 @@ export const AdminDashboardDrawer = () => {
     openEditModal, 
     updatePrice, 
     deleteItem, 
-    resetMenuToDefault 
+    resetMenuToDefault,
+    activeAdminTab,
+    setActiveAdminTab,
+    siteContent
   } = useMenu();
 
   const [search, setSearch] = useState('');
@@ -329,8 +334,46 @@ export const AdminDashboardDrawer = () => {
           </div>
         )}
 
-        {/* Toolbar: Search, Category, and Add Button */}
-        <div className="p-4 sm:p-5 border-b border-neutral-800 space-y-3 bg-neutral-900/60">
+        {/* Main Tabs Switcher: Meals & Pricing vs Header & Texts */}
+        <div className="flex border-b border-neutral-800 bg-neutral-900/90 px-4 sm:px-5 pt-2.5 gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => setActiveAdminTab('menu')}
+            className={`pb-2.5 px-3 text-xs sm:text-sm font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
+              activeAdminTab === 'menu'
+                ? 'border-[#D4AF37] text-[#D4AF37]'
+                : 'border-transparent text-neutral-400 hover:text-white'
+            }`}
+          >
+            <Utensils className="w-4 h-4" />
+            <span>{lang === 'ar' ? 'إدارة الوجبات والأسعار' : 'Gestion des Plats & Prix'}</span>
+            <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-neutral-800 text-neutral-300 font-mono">
+              {menuItems.length}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveAdminTab('texts')}
+            className={`pb-2.5 px-3 text-xs sm:text-sm font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
+              activeAdminTab === 'texts'
+                ? 'border-[#E85D04] text-[#E85D04]'
+                : 'border-transparent text-neutral-400 hover:text-white'
+            }`}
+          >
+            <Type className="w-4 h-4" />
+            <span>{lang === 'ar' ? 'تعديل الهيدر والنصوص والمعلومات' : 'En-tête, Textes & Infos'}</span>
+            <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-amber-500/20 text-[#D4AF37] font-semibold">
+              {lang === 'ar' ? 'جديد ✨' : 'Nouveau'}
+            </span>
+          </button>
+        </div>
+
+        {/* TAB 1: MEALS & PRICING */}
+        {activeAdminTab === 'menu' && (
+          <>
+            {/* Toolbar: Search, Category, and Add Button */}
+            <div className="p-4 sm:p-5 border-b border-neutral-800 space-y-3 bg-neutral-900/60 shrink-0">
           
           <div className="flex flex-col sm:flex-row items-center gap-2.5">
             {/* Search */}
@@ -557,6 +600,15 @@ export const AdminDashboardDrawer = () => {
             </>
           )}
         </div>
+        </>
+        )}
+
+        {/* TAB 2: HEADER & TEXTS EDITOR */}
+        {activeAdminTab === 'texts' && (
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 no-scrollbar">
+            <AdminTextsEditor />
+          </div>
+        )}
 
       </div>
 

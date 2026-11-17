@@ -29,7 +29,8 @@ export const MenuSection = () => {
     categories, 
     isAdminMode, 
     openEditModal, 
-    openAddModal 
+    openAddModal,
+    siteContent 
   } = useMenu();
   
   const [activeCategory, setActiveCategory] = useState('all');
@@ -111,17 +112,17 @@ export const MenuSection = () => {
         <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neutral-900 border border-[#D4AF37]/40 text-[#D4AF37] text-xs font-bold tracking-wider uppercase">
             <Flame className="w-3.5 h-3.5 text-[#E85D04]" />
-            <span>{lang === 'ar' ? 'قائمة الطعام الحصرية' : 'Notre Carte Gourmande'}</span>
+            <span>{siteContent?.menuBadge?.[lang] || (lang === 'ar' ? 'قائمة الطعام الحصرية' : 'Notre Carte Gourmande')}</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-cairo text-white">
-            {lang === 'ar' ? 'أشهى المأكولات والمشاوي المحضرة بشغف' : 'Saveurs Authentiques & Grillades au Feu'}
+            {siteContent?.menuTitle?.[lang] || (lang === 'ar' ? 'أشهى المأكولات والمشاوي المحضرة بشغف' : 'Saveurs Authentiques & Grillades au Feu')}
           </h2>
 
           <p className="text-sm sm:text-base text-neutral-400">
-            {lang === 'ar' 
+            {siteContent?.menuSubtitle?.[lang] || (lang === 'ar' 
               ? 'تذوق أشهى شاورما على الصاج، مشاوي على الفحم، سندويشات مقرمشة، ومقبلات غنية بالبهارات الشامية' 
-              : 'Dégustez nos shawarmas au saj, grillades au charbon, sandwiches crispy et mezzés aux épices d\'Orient.'}
+              : 'Dégustez nos shawarmas au saj, grillades au charbon, sandwiches crispy et mezzés aux épices d\'Orient.')}
           </p>
         </div>
 

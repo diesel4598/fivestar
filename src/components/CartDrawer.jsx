@@ -23,10 +23,12 @@ import {
 import confetti from 'canvas-confetti';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
+import { useMenu } from '../context/MenuContext';
 import { RESTAURANT_INFO } from '../data/restaurantData';
 
 export const CartDrawer = () => {
   const { lang, dir, t } = useLanguage();
+  const { siteContent } = useMenu();
   const {
     cartItems,
     isCartOpen,
@@ -57,8 +59,12 @@ export const CartDrawer = () => {
   if (!isCartOpen) return null;
 
   // Free delivery calculation
-  const amountToFreeDelivery = Math.max(0, RESTAURANT_INFO.freeDeliveryThreshold - subtotal);
-  const freeDeliveryPercent = Math.min(100, Math.round((subtotal / RESTAURANT_INFO.freeDeliveryThreshold) * 100));
+  const freeThreshold = siteContent?.freeDeliveryThreshold !== undefined 
+    ? siteContent.freeDeliveryThreshold 
+    : RESTAURANT_INFO.freeDeliveryThreshold;
+
+  const amountToFreeDelivery = Math.max(0, freeThreshold - subtotal);
+  const freeDeliveryPercent = Math.min(100, Math.round((subtotal / freeThreshold) * 100));
 
   const handleApplyCode = (e) => {
     e.preventDefault();

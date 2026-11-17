@@ -1,10 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { RESTAURANT_INFO } from '../data/restaurantData';
+import { useMenu } from './MenuContext';
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+  const { siteContent } = useMenu();
   const [cartItems, setCartItems] = useState(() => {
     try {
       const saved = localStorage.getItem('fivestar_cart');
@@ -163,15 +165,26 @@ export const CartProvider = ({ children }) => {
     setPromoMessage(null);
   };
 
+  // Dynamic site content settings
+  const freeDeliveryThreshold = siteContent?.freeDeliveryThreshold !== undefined 
+    ? siteContent.freeDeliveryThreshold 
+    : RESTAURANT_INFO.freeDeliveryThreshold;
+
+  const defaultDeliveryFee = siteContent?.deliveryFee !== undefined 
+    ? siteContent.deliveryFee 
+    : RESTAURANT_INFO.deliveryFee;
+
+  const currentWhatsAppNumber = siteContent?.whatsappNumber || RESTAURANT_INFO.whatsappNumber;
+
   // Calculations
   const subtotal = cartItems.reduce((acc, curr) => acc + curr.totalPrice, 0);
   const discountAmount = Math.round((subtotal * discountPercent) / 100);
   
   const deliveryFee = orderType === 'pickup' 
     ? 0 
-    : subtotal >= RESTAURANT_INFO.freeDeliveryThreshold || subtotal === 0
+    : subtotal >= freeDeliveryThreshold || subtotal === 0
       ? 0
-      : RESTAURANT_INFO.deliveryFee;
+      : defaultDeliveryFee;
 
   const grandTotal = Math.max(0, subtotal - discountAmount + deliveryFee);
   const totalItemsCount = cartItems.reduce((acc, curr) => acc + curr.quantity, 0);
@@ -284,7 +297,7 @@ export const CartProvider = ({ children }) => {
     }
 
     const encoded = encodeURIComponent(message);
-    return `https://wa.me/${RESTAURANT_INFO.whatsappNumber}?text=${encoded}`;
+    return `https://wa.me/${currentWhatsAppNumber}?text=${encoded}`;
   };
 
   return (

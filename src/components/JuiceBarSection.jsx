@@ -15,7 +15,7 @@ import { useMenu } from '../context/MenuContext';
 export const JuiceBarSection = () => {
   const { lang, dir, t } = useLanguage();
   const { addToCart } = useCart();
-  const { menuItems } = useMenu();
+  const { menuItems, siteContent } = useMenu();
   const [addedJuiceId, setAddedJuiceId] = useState(null);
 
   // Filter juices from dynamic menu
@@ -44,11 +44,11 @@ export const JuiceBarSection = () => {
           <div className="space-y-3 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/40 text-emerald-400 text-xs font-bold tracking-wider">
               <Droplets className="w-3.5 h-3.5 animate-bounce" />
-              <span>{lang === 'ar' ? 'ركن العصائر الطبيعية 100%' : 'Bar à Jus 100% Naturels'}</span>
+              <span>{siteContent?.juicesBadge?.[lang] || (lang === 'ar' ? 'ركن العصائر الطبيعية 100%' : 'Bar à Jus 100% Naturels')}</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-cairo text-white">
-              {lang === 'ar' ? (
+              {siteContent?.juicesTitle?.[lang] || (lang === 'ar' ? (
                 <>
                   انتعاش الفواكه الطازجة..{' '}
                   <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 bg-clip-text text-transparent">
@@ -62,13 +62,13 @@ export const JuiceBarSection = () => {
                     Jus Pressés à la Minute
                   </span>
                 </>
-              )}
+              ))}
             </h2>
 
             <p className="text-sm sm:text-base text-neutral-300 leading-relaxed">
-              {lang === 'ar'
+              {siteContent?.juicesSubtitle?.[lang] || (lang === 'ar'
                 ? 'فواكه استوائية ومحلية طازجة، بدون أي سكر صناعي أو مواد حافظة. الرفيق المثالي لكل ساندويش وطبق مشاوي.'
-                : 'Fruits frais pressés à froid sans conservateurs ni sucre raffiné. L\'accord parfait pour équilibrer vos repas.'}
+                : 'Fruits frais pressés à froid sans conservateurs ni sucre raffiné. L\'accord parfait pour équilibrer vos repas.')}
             </p>
           </div>
 

@@ -11,10 +11,12 @@ import {
   ChevronDown
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useMenu } from '../context/MenuContext';
 import { RESTAURANT_INFO } from '../data/restaurantData';
 
 export const HeroSection = () => {
   const { lang, dir, t } = useLanguage();
+  const { siteContent } = useMenu();
 
   const scrollToMenu = () => {
     const el = document.getElementById('menu');
@@ -67,7 +69,7 @@ export const HeroSection = () => {
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </span>
               <span className="text-xs sm:text-sm font-semibold text-[#D4AF37]">
-                {lang === 'ar' ? 'مفتوح الآن نستقبل طلباتكم طازجة حتى 2:00 فجراً' : 'Ouvert maintenant • Commandes en direct jusqu\'à 02h00'}
+                {siteContent?.heroStatusBadge?.[lang] || (lang === 'ar' ? 'مفتوح الآن نستقبل طلباتكم طازجة حتى 2:00 فجراً' : 'Ouvert maintenant • Commandes en direct jusqu\'à 02h00')}
               </span>
             </div>
 
@@ -75,26 +77,26 @@ export const HeroSection = () => {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black font-cairo text-white leading-[1.2] tracking-tight">
               {lang === 'ar' ? (
                 <>
-                  أصالة المذاق الشرقي.. <br />
+                  {siteContent?.heroTitleMain?.ar || 'أصالة المذاق الشرقي..'} <br />
                   <span className="bg-gradient-to-r from-[#D4AF37] via-[#F4D068] to-[#E85D04] bg-clip-text text-transparent">
-                    شاورما على الصاج
+                    {siteContent?.heroTitleHighlight?.ar || 'شاورما على الصاج'}
                   </span>{' '}
-                  ومشاوي على الفحم
+                  {siteContent?.heroTitleSuffix?.ar || 'ومشاوي على الفحم'}
                 </>
               ) : (
                 <>
-                  L'authenticité des saveurs d'Orient.. <br />
+                  {siteContent?.heroTitleMain?.fr || "L'authenticité des saveurs d'Orient.."} <br />
                   <span className="bg-gradient-to-r from-[#D4AF37] via-[#F4D068] to-[#E85D04] bg-clip-text text-transparent">
-                    Shawarma au Saj
+                    {siteContent?.heroTitleHighlight?.fr || 'Shawarma au Saj'}
                   </span>{' '}
-                  & Grillades au Charbon
+                  {siteContent?.heroTitleSuffix?.fr || '& Grillades au Charbon'}
                 </>
               )}
             </h1>
 
             {/* Subheadline */}
             <p className="text-base sm:text-lg text-neutral-300 font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0">
-              {t(RESTAURANT_INFO.subheadline)}
+              {siteContent?.heroDescription?.[lang] || t(RESTAURANT_INFO.subheadline)}
             </p>
 
             {/* Action Buttons */}
@@ -128,7 +130,7 @@ export const HeroSection = () => {
                 </div>
                 <div>
                   <div className="text-xs font-bold text-white">
-                    {lang === 'ar' ? 'حلال 100%' : '100% Halal'}
+                    {siteContent?.heroTrustBadge1?.[lang] || (lang === 'ar' ? 'تحضير طازج يومياً' : 'Préparé frais')}
                   </div>
                   <div className="text-[11px] text-neutral-400">
                     {lang === 'ar' ? 'لحوم بلدية طازجة' : 'Viande fraîche'}
@@ -142,7 +144,7 @@ export const HeroSection = () => {
                 </div>
                 <div>
                   <div className="text-xs font-bold text-white">
-                    {lang === 'ar' ? 'شوي على الفحم' : 'Charbon de bois'}
+                    {siteContent?.heroTrustBadge2?.[lang] || (lang === 'ar' ? 'توصيل سريع وساخن' : 'Livraison rapide')}
                   </div>
                   <div className="text-[11px] text-neutral-400">
                     {lang === 'ar' ? 'نكهة أصيلة مدخنة' : 'Goût authentique'}
@@ -156,10 +158,10 @@ export const HeroSection = () => {
                 </div>
                 <div>
                   <div className="text-xs font-bold text-white">
-                    {lang === 'ar' ? 'توصيل 35 دقيقة' : '30-45 min'}
+                    {siteContent?.heroTrustBadge3?.[lang] || (lang === 'ar' ? 'لحوم ودواجن حلال 100%' : '100% Halal')}
                   </div>
                   <div className="text-[11px] text-neutral-400">
-                    {lang === 'ar' ? 'ساخن ومحكم الغلق' : 'Livraison rapide'}
+                    {lang === 'ar' ? 'ساخن ومحكم الغلق' : 'Qualité garantie'}
                   </div>
                 </div>
               </div>
