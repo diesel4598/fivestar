@@ -44,7 +44,7 @@ export const LocationFooterSection = () => {
               </p>
             </div>
             <a
-              href="https://maps.google.com"
+              href={siteContent?.googleMapsUrl || RESTAURANT_INFO.googleMapsUrl || "https://maps.app.goo.gl/DZn3wbDjtxDf2ecL9"}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-xs font-bold text-[#D4AF37] hover:underline pt-2"
@@ -108,34 +108,41 @@ export const LocationFooterSection = () => {
 
         </div>
 
-        {/* Visual Map / Location Embed Placeholder */}
-        <div className="relative rounded-3xl overflow-hidden border border-neutral-800 mb-14 bg-neutral-900 h-64 sm:h-80 shadow-2xl flex items-center justify-center">
-          <div 
-            className="absolute inset-0 bg-cover bg-center filter grayscale contrast-125 opacity-35"
-            style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1200&q=80')`
-            }}
+        {/* Visual Map / Location Embed */}
+        <div className="relative rounded-3xl overflow-hidden border border-neutral-800 mb-14 bg-neutral-900 h-72 sm:h-96 shadow-2xl group">
+          <iframe
+            title="Google Maps Location - خمس نجوم"
+            src="https://maps.google.com/maps?q=33.5768037,-7.6362643+(%D8%AE%D9%85%D8%B3+%D9%86%D8%AC%D9%88%D9%85)&hl=ar&z=17&output=embed"
+            className="w-full h-full border-0 filter grayscale-[0.6] invert-[0.9] hue-rotate-[180deg] contrast-[1.1] opacity-60 group-hover:opacity-85 transition-opacity duration-500 pointer-events-auto"
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-black/40 to-[#0A0A0A]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-transparent pointer-events-none" />
           
-          <div className="relative z-10 text-center p-6 space-y-3 max-w-md">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#E85D04] to-[#D4AF37] text-neutral-950 flex items-center justify-center mx-auto shadow-xl animate-bounce">
-              <MapPin className="w-7 h-7" />
+          <div className="absolute bottom-6 start-6 end-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-neutral-950/85 backdrop-blur-md border border-[#D4AF37]/40 shadow-2xl">
+            <div className="flex items-center gap-3 text-start">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#E85D04] to-[#D4AF37] text-neutral-950 flex items-center justify-center shrink-0 shadow-lg">
+                <MapPin className="w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="font-cairo font-black text-sm sm:text-base text-white">
+                  {siteContent?.brandName?.[lang] || (lang === 'ar' ? 'مطعم خمس نجوم' : '5 ÉTOILES')} • {lang === 'ar' ? 'المعاريف' : 'Maârif'}
+                </h4>
+                <p className="text-xs text-neutral-300">
+                  {siteContent?.address?.[lang] || t(RESTAURANT_INFO.address)}
+                </p>
+              </div>
             </div>
-            <h4 className="font-cairo font-black text-xl text-white">
-              {siteContent?.brandName?.[lang] || (lang === 'ar' ? 'مطعم خمس نجوم - المعاريف' : '5 ÉTOILES - Casablanca Maârif')}
-            </h4>
-            <p className="text-xs text-neutral-300">
-              {siteContent?.address?.[lang] || t(RESTAURANT_INFO.address)}
-            </p>
+
             <a
-              href="https://maps.google.com"
+              href={siteContent?.googleMapsUrl || RESTAURANT_INFO.googleMapsUrl || "https://maps.app.goo.gl/DZn3wbDjtxDf2ecL9"}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-neutral-900/90 border border-[#D4AF37]/50 hover:bg-[#D4AF37] hover:text-black text-white text-xs font-bold transition-all shadow cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#E85D04] hover:from-[#c29f2f] hover:to-[#cf5202] text-neutral-950 text-xs font-black transition-all shadow-xl hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
             >
-              <span>{lang === 'ar' ? 'بدء الملاحة عبر خرائط جوجل' : 'Itinéraire Google Maps'}</span>
-              <ExternalLink className="w-3.5 h-3.5" />
+              <span>{lang === 'ar' ? 'فتح الموقع في خرائط جوجل' : 'Ouvrir sur Google Maps'}</span>
+              <ExternalLink className="w-3.5 h-3.5 stroke-[2.5]" />
             </a>
           </div>
         </div>

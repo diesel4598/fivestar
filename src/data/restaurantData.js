@@ -14,8 +14,13 @@ export const RESTAURANT_INFO = {
   phone: "+212 694-916737",
   whatsappNumber: "212694916737",
   address: {
-    ar: "شارع القدس، حي المعاريف، الدار البيضاء",
-    fr: "Boulevard Al Qods, Quartier Maârif, Casablanca",
+    ar: "زنقة جورج صاند، المعاريف، الدار البيضاء 20100",
+    fr: "Rue Georges Sand, Maârif, Casablanca 20100",
+  },
+  googleMapsUrl: "https://maps.app.goo.gl/DZn3wbDjtxDf2ecL9",
+  coordinates: {
+    lat: 33.5768037,
+    lng: -7.6362643,
   },
   openingHours: {
     ar: "يومياً: 12:00 ظهراً – 02:00 فجراً",

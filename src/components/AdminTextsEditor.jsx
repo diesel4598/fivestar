@@ -702,6 +702,28 @@ export const AdminTextsEditor = () => {
                     dir="ltr"
                   />
                 </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-bold text-neutral-300 mb-1.5 flex items-center justify-between">
+                    <span>{lang === 'ar' ? 'رابط خرائط جوجل (Google Maps URL)' : 'Lien Google Maps'}</span>
+                    <a
+                      href={formData.googleMapsUrl || 'https://maps.app.goo.gl/DZn3wbDjtxDf2ecL9'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] text-[#D4AF37] hover:underline"
+                    >
+                      {lang === 'ar' ? 'معاينة الموقع ↗' : 'Tester le lien ↗'}
+                    </a>
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.googleMapsUrl || ''}
+                    onChange={(e) => handleTextChange('googleMapsUrl', e.target.value)}
+                    placeholder="https://maps.app.goo.gl/DZn3wbDjtxDf2ecL9"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-white text-xs sm:text-sm focus:border-rose-500 focus:outline-none"
+                    dir="ltr"
+                  />
+                </div>
               </div>
             </div>
 

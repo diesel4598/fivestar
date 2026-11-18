@@ -19,8 +19,13 @@ export const DEFAULT_SITE_CONTENT = {
     fr: "Tous les jours: 12h00 – 02h00 du matin",
   },
   address: {
-    ar: "شارع القدس، حي المعاريف، الدار البيضاء",
-    fr: "Boulevard Al Qods, Quartier Maârif, Casablanca",
+    ar: "زنقة جورج صاند، المعاريف، الدار البيضاء 20100",
+    fr: "Rue Georges Sand, Maârif, Casablanca 20100",
+  },
+  googleMapsUrl: "https://maps.app.goo.gl/DZn3wbDjtxDf2ecL9",
+  coordinates: {
+    lat: 33.5768037,
+    lng: -7.6362643,
   },
   freeDeliveryThreshold: 150,
   deliveryFee: 10,
